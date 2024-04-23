@@ -1,0 +1,5 @@
+ - name: copy-sql-creds
+   ansible.builtin.copy:
+     src: "/home/tk/.ansible/vault.yml"
+     dest: "/var/www/html/config.php"
+   become: yes

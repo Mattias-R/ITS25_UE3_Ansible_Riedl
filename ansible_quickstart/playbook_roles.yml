@@ -1,0 +1,17 @@
+---
+- name: Run Roles for Webserver
+  hosts: webserver
+  roles:
+    - packet_updater
+    - install_defaults
+    - apache_setup
+    - sshserver_config
+    - copy_sql_creds
+
+- name: Run Roles for mail1
+  hosts: mail1
+  roles:
+    - packet_updater
+    - install_defaults
+    - smtpdeamon_installer
+    - sshserver_config

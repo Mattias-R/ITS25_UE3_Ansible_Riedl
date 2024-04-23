@@ -1,0 +1,10 @@
+- name: Install default Packages
+  package:
+    name:
+      - openssh-server
+      - nano
+      - netplan.io
+      - iptables
+    state: present
+  become: yes
+

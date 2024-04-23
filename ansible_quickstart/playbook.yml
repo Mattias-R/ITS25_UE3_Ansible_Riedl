@@ -1,0 +1,69 @@
+---
+- name: default Playblook
+  hosts: all
+  become: yes
+  tasks:
+
+    #2.2.3 Ensure CUPS is not installed
+    - name: uninstall CUPS
+      ansible.builtin.command: apt purge cups
+
+    - name: Get CUPS status
+      ansible.builtin.command: dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\n' cups
+      register: cups_status
+#     ignore_errors: true
+#     no_log: true
+      failed_when: false
+
+    - name: Print CUPS status
+      ansible.builtin.debug:
+        msg: "CUPS is installed: {{ cups_status.stdout | default('No', true) }}"
+
+
+    #6.1.1 Ensure permissions on /etc/passwd are configured
+    - name: Change owner & group of /etc/passwd
+      ansible.builtin.command: chown root:root /etc/passwd
+
+    - name: Change permissions of /etc/passwd
+      ansible.builtin.command: chmod u-x,go-wx /etc/passwd
+
+    - name: Get status of /etc/passwd
+      ansible.builtin.stat:
+        path: /etc/passwd
+      register: passwd_stat
+
+    - name: Print status of /etc/passwd
+      ansible.builtin.debug:
+        var: passwd_stat.stat
+
+
+    #2.2.8 Ensure FTP Server is not installed (automated)
+    - name: uninstall FTP
+      ansible.builtin.command: apt purge vsftpd -y
+
+    - name: Get FTP status
+      ansible.builtin.command: dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\n' vsftpd
+      register: ftp_status
+#     ignore_errors: true
+      failed_when: false
+
+    - name: Print FTP status
+      ansible.builtin.debug:
+         msg: "FTP Server is installed: {{ ftp_status.stdout | default('No', true) }}"
+
+
+    #4.1.1.1 Ensure auditd is installed
+    - name: install auditd
+      ansible.builtin.command: apt install auditd audispd-plugins -y
+
+    - name: Get auditd status
+      ansible.builtin.command: dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\n' auditd audispd-plugins
+      register: auditd_status
+#     ignore_errors: true
+#     no_log: true
+      failed_when: false
+
+    - name: Print auditd status
+      ansible.builtin.debug:
+        msg: "auditd is installed: {{ auditd_status.stdout | default('No', true) }}"
+

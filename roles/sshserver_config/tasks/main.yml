@@ -1,0 +1,5 @@
+ - name: config shh-server
+   ansible.builtin.copy:
+     src: "/home/tk/.ansible/sshd_config"
+     dest: "/etc/ssh/sshd_config"
+   become: yes

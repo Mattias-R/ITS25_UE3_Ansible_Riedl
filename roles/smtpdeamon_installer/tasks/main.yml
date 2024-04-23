@@ -1,0 +1,6 @@
+- name: install smtp-deamon postfix
+  package:
+    name: postfix
+    state: present
+  become: yes
+
